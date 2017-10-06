@@ -51,6 +51,12 @@ clipmax = median + 5*std_dev
 
 print('Cutoff = ', clipmax)
 
+nrejected = len(countvalues)-clipmax
+
+fracrejected = nrejected/len(countvalues)
+
+print('Fraction of pixels rejected = ', fracrejected)
+
 #Plot histogram overplotted with normal distribution
 
 cmin=900
