@@ -17,10 +17,11 @@ from scipy.stats import norm
 
 
 # Open .fits file to inspect
-bias_frame = fits.open(raw_input('Enter .fits file to inspect: '))
+filename=(raw_input('Enter .fits file to inspect: '))
+fits_file = fits.open(filename)
 
 # Convert image into numpy array
-imagedata = bias_frame[0].data
+imagedata = fits_file[0].data
 
 # Check dimensions of 2d array:
 print('Dimenstions of 2d numpy array: ', imagedata.shape)
@@ -51,7 +52,7 @@ clipmax = median + 5*std_dev
 
 print('Cutoff = ', clipmax)
 
-nrejected = len(countvalues)-clipmax
+nrejected = clipmax
 
 fracrejected = nrejected/len(countvalues)
 
@@ -74,9 +75,16 @@ mode_clipped=stats.mode(clippedvalues)[0][0]
 xarray=np.linspace(cmin,cmax,nbins*10)
 yarray=normalization*norm.pdf(xarray,loc=mu, scale=sig_clipped)
 
+#Construct the plot
 plt.hist(countvalues,range=[cmin,cmax], bins=nbins);
 plt.yscale('log')
 plt.ylim([0.1,1e6])
+plt.xlabel("Number of counts")
+plt.ylabel("Number of instances")
+plt.title("Distribution of counts, %s"%filename)
+plt.text(1025,10000,"Mean = %s \nMedian = %s \nMode = %s \nStandard Deviation = %s \nFraction of pixels rejected = \n%s"%(mean,median,mode,std_dev,fracrejected))
 plt.plot(xarray,yarray,color="red",linewidth=3.0)
 plt.axvline(x=mode,linewidth=3.0,color="yellow")
 plt.show()
+
+fits.close(filename)
