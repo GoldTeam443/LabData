@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from astropy.io import fits
 
 ### statistics functions
+import scipy
 from scipy import stats
 from scipy.stats import norm
 
@@ -73,16 +74,16 @@ while clippingchosen==0:
 
 #Plot histogram overplotted with normal distribution
 
-cmin=900
-cmax=1200
+cmin=np.min(countvalues)
+cmax=np.max(countvalues)
 nbins=100
 normalization=(cmax-cmin)/nbins*len(countvalues[(countvalues>=cmin) & (countvalues<=cmax)])
 
 if clippingchosen==1:
-    cmax=1200
     clipmax=sigmaclipping()
     clipmin = cmin
     clippedvalues = countvalues[(countvalues>=clipmin) & (countvalues<=clipmax)]
+    cmax=clipmax
 
     mu=np.mean(clippedvalues)
     sig_clipped=np.std(clippedvalues)
