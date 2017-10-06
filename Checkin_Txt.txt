@@ -1,0 +1,29 @@
+4.1.3 Combined 10 files to make master bias for -5 and -10 deg. As can be seen in 
+      the excel sheet the values decreased by a factor of around 1/sqrt(N_images)
+
+4.2.2 The master bias was subracted from each dark exposure manually using fttools 
+      for both -5 and -10 deg. It is believed that the median should be used for 
+      the "typical counts" because the dark current is present in very few pixels 
+      and therefore is offseting the data. This will increase our uncertainty. The
+      overall uncertainty should be delta_x_med=delat_x_mean*sqrt(pi/2) (for large
+      numbers)
+
+4.2.3 Linear regression done in excel. The dark current in electrons per pixel per
+      second is equal to the slope of the regression which is 0.3673 for -5 deg and
+      0.1755 for -10 deg.
+
+4.3.1 Average of 10 flat fields was taken using fttools and was normalized against
+      the mode. (master_flat_field_norm.FIT)
+
+4.3.2 DS9 not working on Uhura??
+
+4.5.1 The gain can be measured by taking the sqrt(sigma_counts/sqrt(N_mean)). A
+      comparison between the real value and the calculated is shown in the excel
+      file. It is offset by about ~0.2 probably because we assume perfect quantum
+      efficency
+
+4.6.1 Spectrographic data was combined into a master flat using pyraf
+
+4.6.2 ds9 not working
+
+4.6.3 
