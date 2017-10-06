@@ -48,15 +48,28 @@ print('Mode = ', mode)
 print('Standard Deviation', std_dev)
 
 #Sigma clipping: Remove all points smaller or larger than median +/- 5(sigma)
-clipmax = median + 5*std_dev
+def sigmaclipping():
+    clipmax = median + 5*std_dev
 
-print('Cutoff = ', clipmax)
+    print('Cutoff = ', clipmax)
 
-nrejected = clipmax
+    nrejected = clipmax
+    fracrejected = nrejected/len(countvalues)
+    print('Fraction of pixels rejected = ', fracrejected)
 
-fracrejected = nrejected/len(countvalues)
+    return clipmax
 
-print('Fraction of pixels rejected = ', fracrejected)
+clippingchosen=0
+
+while clippingchosen==0:
+    clipping=raw_input("Do sigma clipping? (y/n) ")
+    if clipping == 'y':
+        clippingchosen=1
+    if clipping == 'n':
+        clippingchosen=2
+    else:
+        print("Please type either y or n.")
+        continue
 
 #Plot histogram overplotted with normal distribution
 
@@ -65,15 +78,25 @@ cmax=1200
 nbins=100
 normalization=(cmax-cmin)/nbins*len(countvalues[(countvalues>=cmin) & (countvalues<=cmax)])
 
-clipmin = cmin
-clippedvalues = countvalues[(countvalues>=clipmin) & (countvalues<=clipmax)]
+if clippingchosen==1:
+    cmax=1200
+    clipmax=sigmaclipping()
+    clipmin = cmin
+    clippedvalues = countvalues[(countvalues>=clipmin) & (countvalues<=clipmax)]
 
-mu=np.mean(clippedvalues)
-sig_clipped=np.std(clippedvalues)
-mode_clipped=stats.mode(clippedvalues)[0][0]
+    mu=np.mean(clippedvalues)
+    sig_clipped=np.std(clippedvalues)
 
-xarray=np.linspace(cmin,cmax,nbins*10)
-yarray=normalization*norm.pdf(xarray,loc=mu, scale=sig_clipped)
+    xarray=np.linspace(cmin,cmax,nbins*10)
+    yarray=normalization*norm.pdf(xarray,loc=mu, scale=sig_clipped)
+
+else:
+    cmax=np.max(countvalues)
+    mu=np.mean(countvalues)
+    sig=np.std(countvalues)
+    
+    xarray=np.linspace(cmin,cmax,nbins*10)
+    yarray=normalization*norm.pdf(xarray,loc=mu, scale=sig)
 
 #Construct the plot
 plt.hist(countvalues,range=[cmin,cmax], bins=nbins);
@@ -82,9 +105,10 @@ plt.ylim([0.1,1e6])
 plt.xlabel("Number of counts")
 plt.ylabel("Number of instances")
 plt.title("Distribution of counts, %s"%filename)
-plt.text(1025,10000,"Mean = %s \nMedian = %s \nMode = %s \nStandard Deviation = %s \nFraction of pixels rejected = \n%s"%(mean,median,mode,std_dev,fracrejected))
-plt.plot(xarray,yarray,color="red",linewidth=3.0)
-plt.axvline(x=mode,linewidth=3.0,color="yellow")
+plt.text(.55*cmax,11000,"Mean = %s \nMedian = %s \nMode = %s \nStandard Deviation = %s"%(mean,median,mode,std_dev))
+if clipping==1:
+    plt.plot(xarray,yarray,color="red",linewidth=3.0)
+    plt.axvline(x=mode,linewidth=3.0,color="yellow")
 plt.show()
 
 fits.close(filename)
