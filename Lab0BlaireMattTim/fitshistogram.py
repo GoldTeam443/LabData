@@ -88,7 +88,7 @@ if clippingchosen==1:
     mu=np.mean(clippedvalues)
     sig_clipped=np.std(clippedvalues)
 
-    xarray=np.linspace(cmin,cmax,nbins*10)
+    xarray=np.linspace(clipmin,clipmax,nbins*10)
     yarray=normalization*norm.pdf(xarray,loc=mu, scale=sig_clipped)
 
 else:
@@ -101,12 +101,12 @@ else:
 
 #Construct the plot
 plt.hist(countvalues,range=[cmin,cmax], bins=nbins);
-plt.yscale('log')
+#plt.yscale('log')
 plt.ylim([0.1,1e6])
 plt.xlabel("Number of counts")
 plt.ylabel("Number of instances")
 plt.title("Distribution of counts, %s"%filename)
-plt.text(.55*cmax,11000,"Mean = %s \nMedian = %s \nMode = %s \nStandard Deviation = %s"%(mean,median,mode,std_dev))
+plt.text(14000,11000,"Mean = %s \nMedian = %s \nMode = %s \nStandard Deviation = %s"%(mean,median,mode,std_dev))
 if clippingchosen==1:
     plt.plot(xarray,yarray,color="red",linewidth=3.0)
     plt.axvline(x=mode,linewidth=3.0,color="yellow")

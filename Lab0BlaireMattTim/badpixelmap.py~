@@ -1,0 +1,54 @@
+import numpy as np
+from astropy.io import fits
+from scipy import stats
+from scipy.stats import norm
+
+#  Open masterflat
+masterflat = fits.open("master_flat_field.fits")
+masterflat_data = masterflat[0].data
+
+#  Open dark frame
+darkframe = fits.open("darkframes5m10deg.00000001.DARK.fits")
+darkframe_data = darkframe[0].data
+
+#  Flatten masterflat into 1d list:
+counts_flat = masterflat_data.flatten()
+counts_flat.shape
+
+#  Compute median and standard deviation for masterflat
+flat_med = np.median(counts_flat)
+flat_std = np.std(counts_flat)
+
+#  Create array of zeroes as base for bad pixel map
+bpmap = np.tile(0, (1024,1024)).flatten()
+
+#  Loop over x and y values in masterflat
+for i in counts_flat:
+    for j in counts_flat:
+        if [i,j] < (flat_med - 5*flat_std):
+            bpmap[i,j] = 1
+
+#  Flatten dark frame into 1d list:
+counts_dark = darkframe_data.flatten()
+counts_dark.shape
+
+#  Compute median and standard deviation for dark frame
+dark_med = np.median(counts_dark)
+dark_std = np.std(counts_dark)
+
+#  Loop over x and y values in dark frame
+for i in counts_dark:
+    for j in counts_dark:
+        if [i,j] > (dark_med + 5*flat_std) and bpmap[x] == 0:
+            bpmap[i,j] = 1
+
+#  Reshape 1d bad pixel map to 2d
+bpmapshaped = np.reshape(bpmap, (-1, 1024))
+
+#  Write bpmap to fits file to save it
+bpmapfits = fits.PrimaryHDU(bpmapshaped)
+bpmapfits.writeto('bad_pixel_map.fits')
+
+
+masterflat.close()
+darkframe.close()
