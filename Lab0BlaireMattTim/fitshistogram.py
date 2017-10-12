@@ -107,7 +107,7 @@ plt.xlabel("Number of counts")
 plt.ylabel("Number of instances")
 plt.title("Distribution of counts, %s"%filename)
 plt.text(.55*cmax,11000,"Mean = %s \nMedian = %s \nMode = %s \nStandard Deviation = %s"%(mean,median,mode,std_dev))
-if clipping==1:
+if clippingchosen==1:
     plt.plot(xarray,yarray,color="red",linewidth=3.0)
     plt.axvline(x=mode,linewidth=3.0,color="yellow")
 plt.show()
