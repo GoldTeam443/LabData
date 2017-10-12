@@ -13,7 +13,7 @@ darkframe_data = darkframe[0].data
 
 #  Flatten masterflat into 1d list:
 counts_flat = masterflat_data
-#counts_flat.shape
+counts_flat.shape
 
 #  Compute median and standard deviation for masterflat
 flat_med = np.median(counts_flat)
@@ -32,7 +32,7 @@ for i in xrange(counts_flat.shape[0]):
 
 #  Flatten dark frame into 1d list:
 counts_dark = darkframe_data
-#counts_dark.shape
+counts_dark.shape
 
 #  Compute median and standard deviation for dark frame
 dark_med = np.median(counts_dark)
@@ -41,7 +41,7 @@ dark_std = np.std(counts_dark)
 #  Loop over x and y values in dark frame
 for i in xrange(counts_dark.shape[0]):
     for j in xrange(counts_dark.shape[1]):
-        if counts_flat[i,j] > (dark_med + 5*flat_std) and bpmap[i,j] == 0:
+        if counts_flat[i,j] > (dark_med + 5*dark_std) and bpmap[i,j] == 0:
             bpmap[i,j] = 1
         elif bpmap[i,j] == 1:
             bpmap[i,j] = 1
