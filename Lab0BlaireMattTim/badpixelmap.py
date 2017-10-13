@@ -23,12 +23,12 @@ flat_std = np.std(counts_flat)
 bpmap = np.tile(0, (1024,1024))
 
 #  Loop over x and y values in masterflat
-for i in xrange(counts_flat.shape[0]):
-    for j in xrange(counts_flat.shape[1]):
-        if counts_flat[i,j] < (flat_med - 5*flat_std):
-            bpmap[i,j] = 1
+for i in range(0, counts_flat.shape[0]):
+    for j in range(0, counts_flat.shape[1]):
+        if counts_flat[i][j] <= (flat_med - 5*flat_std):
+            bpmap[i][j] = 0
         else:
-            bpmap[i,j] = 0
+            bpmap[i][j] = 1
 
 #  Flatten dark frame into 1d list:
 counts_dark = darkframe_data
@@ -38,21 +38,19 @@ counts_dark.shape
 dark_med = np.median(counts_dark)
 dark_std = np.std(counts_dark)
 
-#  Loop over x and y values in dark frame
-for i in xrange(counts_dark.shape[0]):
-    for j in xrange(counts_dark.shape[1]):
-        if counts_flat[i,j] > (dark_med + 5*dark_std) and bpmap[i,j] == 0:
-            bpmap[i,j] = 1
-        elif bpmap[i,j] == 1:
-            bpmap[i,j] = 1
-        else:
-            bpmap[i,j] = 0
+print(dark_med + 5*dark_std)
 
-#  Reshape 1d bad pixel map to 2d
-bpmapshaped = np.reshape(bpmap, (-1, 1024))
+#  Loop over x and y values in dark frame
+for i in range(0, counts_dark.shape[0]):
+    for j in range(0, counts_dark.shape[1]):
+        if counts_dark[i][j] >= (dark_med + 5*dark_std) or  bpmap[i][j] == 0:
+            bpmap[i][j] = 0
+        else:
+            bpmap[i][j] = 1
+
 
 #  Write bpmap to fits file to save it
-bpmapfits = fits.PrimaryHDU(bpmapshaped)
+bpmapfits = fits.PrimaryHDU(bpmap)
 bpmapfits.writeto('bad_pixel_map.fits')
 
 
