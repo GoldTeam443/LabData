@@ -55,8 +55,11 @@ def sigmaclipping():
     print('Cutoff = ', clipmax)
 
     nrejected = clipmax
+    nwarm = median + 3*std_dev
     fracrejected = nrejected/len(countvalues)
-    print('Fraction of pixels rejected = ', fracrejected)
+    fracwarm = nwarm/len(countvalues)
+    print('Fraction of hot pixels = ', fracrejected)
+    print('Fraction of warm pixels = ', fracwarm)
 
     return clipmax
 
