@@ -55,11 +55,8 @@ def sigmaclipping():
     print('Cutoff = ', clipmax)
 
     nrejected = clipmax
-    nwarm = median + 3*std_dev
     fracrejected = nrejected/len(countvalues)
-    fracwarm = nwarm/len(countvalues)
-    print('Fraction of hot pixels = ', fracrejected)
-    print('Fraction of warm pixels = ', fracwarm)
+    print('Fraction of pixels rejected = ', fracrejected)
 
     return clipmax
 
@@ -76,11 +73,6 @@ while clippingchosen==0:
         continue
 
 #Plot histogram overplotted with normal distribution
-
-mean = np.mean(countvalues)
-median = np.median(countvalues)
-print(mean)
-print(median)
 
 cmin=np.min(countvalues)
 cmax=np.max(countvalues)
@@ -106,9 +98,6 @@ else:
     
     xarray=np.linspace(cmin,cmax,nbins*10)
     yarray=normalization*norm.pdf(xarray,loc=mu, scale=sig)
-
-mean = np.mean(countvalues)
-print(mean)
 
 #Construct the plot
 plt.hist(countvalues,range=[cmin,cmax], bins=nbins);
