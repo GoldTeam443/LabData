@@ -22,6 +22,8 @@ The commits you have made will be local until you push them to the remote reposi
 
 If you have made an error while editing a file and want to rewind to a previously committed version, type "git checkout -- [filename]"
 
+Type "git log" to see a log of everyone's previous commits.
+
 Type "git push" to push your changes. You will be prompted to log into Github.
 
 Now your changes should be synced with Github.
