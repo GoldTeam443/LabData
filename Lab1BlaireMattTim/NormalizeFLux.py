@@ -39,6 +39,17 @@ def Extract_Data(filename):
 
     return time_list, flux_list, err_list, norm_flux, norm_err
 
+#calculates the error on the average of a data set
+def average_err(values):
+    avg = sum(values)/len(values)
+    s = 0
+    for j in range(0,len(values)):
+        s = s + (values[j] - avg)**2.0
+    var = s/len(values)
+    sd = var**0.5
+    err = sd/(len(values)*0.5)
+    return err
+
 
 #calls the extraction sub_function to return all needed values
 time_main, flux_main, err_main, norm_flux_main, norm_err_main = Extract_Data('Flux_Values_Main.txt')
@@ -74,7 +85,7 @@ for i in range(0, len(norm_flux_1)):
     norm_err.append((1.0/denominator)**0.5)
     
     main_ratio.append(flux_main[i]/norm_flux[i])
-    main_ratio_err.append(((err_main[i]/norm_flux[i])**(2.0)+(flux_main[i]*norm_err[i]/norm_flux[i]**(2.0))**(2.0))**(0.5))
+    main_ratio_err.append(((err_main[i]/norm_flux[i])**(2.0)+(flux_main[i]*norm_err[i]/(norm_flux[i]**(2.0)))**(2.0))**(0.5))
 
 #Claculates the baseflux from the first and last images
 base_flux = []
@@ -96,21 +107,19 @@ for i in range(0, len(main_ratio)):
 #Method to average data
 norm_flux_final = norm_flux_final[0:619]
 norm_err_final = norm_err_final[0:619]
+
 average_flux_final = []
 average_err_final = []
 new_time = []
 for i in range(0, 609, 10):
-    f = norm_flux_final[i]+norm_flux_final[i+1]+norm_flux_final[i+2]+norm_flux_final[i+3]+norm_flux_final[i+4]+norm_flux_final[i+5]+norm_flux_final[i+6]+norm_flux_final[i+7]+norm_flux_final[i+8]+norm_flux_final[i+9]
-    average_flux_final.append(f/10)
-    new_time.append(time_main[i+4])
-
-    e = norm_err_final[i]+norm_err_final[i+1]+norm_err_final[i+2]+norm_err_final[i+3]+norm_err_final[i+4]+norm_err_final[i+5]+norm_err_final[i+6]+norm_err_final[i+7]+norm_err_final[i+8]+norm_err_final[i+9]
-    a = e/10.0
-    diff = 0.0
+    f = []
     for j in range(0,9):
-        diff = diff + ((a-norm_err_final[j+i])**2.0)
+       f.append(norm_flux_final[j+i])
 
-    average_err_final.append(((diff/9.0)**0.5)/(10.0**0.5))
+    average_flux_final.append(sum(f)/10)
+    new_time.append(time_main[i+4])
+    ee = average_err(f)
+    average_err_final.append(ee)
 
 #Finds averaged fluxes before, during, and after transient
 norm_f_before = []
@@ -122,22 +131,19 @@ err_f_after = []
 
 for i in range(0, 134):
     norm_f_before.append(main_ratio[i]/baseline_flux)
-    err_f_before.append(main_ratio_err[i]/baseline_flux)
 for i in range(200, 400):
     norm_f_during.append(main_ratio[i]/baseline_flux)
-    err_f_during.append(main_ratio_err[i]/baseline_flux)
 for i in range(548, len(main_ratio)):
     norm_f_after.append(main_ratio[i]/baseline_flux)
-    err_f_after.append(main_ratio_err[i]/baseline_flux)
 
 avg_f_before = sum(norm_f_before)/len(norm_f_before)
-avg_err_before = sum(err_f_before)/len(err_f_before)/(len(err_f_before)**0.5)
+avg_err_before = average_err(norm_f_before)
 
 avg_f_during = sum(norm_f_during)/len(norm_f_during)
-avg_err_during = sum(err_f_during)/len(err_f_during)/(len(err_f_during)**0.5)
+avg_err_during = average_err(norm_f_during)
 
 avg_f_after = sum(norm_f_after)/len(norm_f_after)
-avg_err_after = sum(err_f_after)/len(err_f_after)/(len(err_f_after)**0.5)
+avg_err_after = average_err(norm_f_after)
 
 print('Average normalized flux before:', avg_f_before, '+', avg_err_before)
 print('Average normalized flux during:', avg_f_during, '+', avg_err_during)
