@@ -116,7 +116,7 @@ for i in range(0, 609, 10):
     for j in range(0,9):
        f.append(norm_flux_final[j+i])
 
-    average_flux_final.append(sum(f)/10)
+    average_flux_final.append(sum(f)/len(f))
     new_time.append(time_main[i+4])
     ee = average_err(f)
     average_err_final.append(ee)
