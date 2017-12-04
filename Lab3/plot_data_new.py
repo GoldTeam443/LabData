@@ -17,7 +17,6 @@ from scipy.optimize import curve_fit
 #sunx = sun_data[:,0]
 #suny = sun_data[:,1]
 
-
 # Read in satellite and sun single dish data
 sat_data = genfromtxt("single_dish_sat2.csv", delimiter=",")
 sun_data = genfromtxt("sun_single_1.csv", delimiter=",")
@@ -35,7 +34,7 @@ sun_data = genfromtxt("sun_single_1.csv", delimiter=",")
 sun_data = sun_data[100:200,]
 sat_data = sat_data[113:,]
 
-#flip data functions 
+#flip data functions
 sun_place = 1 - sun_data[:,1]
 sat_place = 1 - sat_data[:,1]
 
@@ -47,7 +46,6 @@ sat_flip = np.column_stack((sat_data[:,0],sat_place))
 #print 'sat_flip max value is ', np.amax(sat_flip[:,1])
 #print 'sun_flip min value is ', np.amin(sun_flip[:,1])
 #print 'sat_flip min value is ', np.amin(sat_flip[:,1])
-
 
 
 #normalize x axis of data to same length
@@ -89,8 +87,6 @@ saty = a + (y - C)*(b - a)/(D - C)
 #print 'suny min value is ', np.amin(suny)
 #print 'saty min value is ', np.amin(saty)
 
-
-
 #normalized values of data
 sun_norm = np.column_stack((sun_flip[:,0], suny))
 sat_norm = np.column_stack((sat_flip[:,0], saty))
@@ -104,3 +100,4 @@ plt.xlabel('Time')
 plt.ylabel('Voltage')
 plt.ylim(0,3)
 plt.show()
+
