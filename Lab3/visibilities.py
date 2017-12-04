@@ -1,3 +1,7 @@
+# Script for fitting and plotting the visibilities recorded in Lab 3
+#      to a sinc function
+# Written by Blaire Ness
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit

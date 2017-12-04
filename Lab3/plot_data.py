@@ -1,3 +1,6 @@
+# Script for overplotting single dish data for the sun and a satellite
+# Written by Tim Sarro, Blaire Ness, and Matt Lee
+
 import numpy as np
 import math
 from numpy import genfromtxt
