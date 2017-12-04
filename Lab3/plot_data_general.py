@@ -25,7 +25,7 @@ for n in voltage:
 
 plt.plot(time, amplitude)
 plt.xlabel("Degrees")
-plt.ylabel("Amplitude")
+plt.ylabel("Flux")
 #plt.show()
 
 pngname = input("Enter name of file to be saved: ")
